@@ -12,7 +12,8 @@
   "license": "MIT",
   "dependencies": {
     "react-transition-group": "^4.4.1",
-    "shifty": "^2.13.0"
+    "shifty": "^2.13.0",
+    "tinygesture": "^1.1.4"
   },
   "homepage": "https://joseluismurillorios.github.io/react-simple-scrollpicker/",
   "repository": "https://github.com/joseluismurillorios/react-simple-scrollpicker.git",

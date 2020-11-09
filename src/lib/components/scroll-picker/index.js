@@ -2,15 +2,20 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Tweenable } from 'shifty';
 
-import { MONTHS_LONG } from './utils';
+import { clamp, MONTHS_LONG } from './utils';
 import './style.scss';
+import Draggable from '../draggable';
 
 const ScrollPicker = ({
   height,
 }) => {
   const tweenRef = useRef(new Tweenable()).current;
   const containerRef = useRef(null);
+  const bodyRef = useRef(null);
+  // const scrollerRef = useRef(null);
   const [index, setIndex] = useState(1);
+
+  const length = MONTHS_LONG.length;
 
   const tween = useCallback((to) => {
     if (tweenRef.isPlaying()) {
@@ -20,7 +25,7 @@ const ScrollPicker = ({
     tweenRef.setConfig({
       from: { x: index },
       to: { x: to },
-      duration: 500,
+      duration: 300,
       easing: 'easeOutQuad',
       step: (state) => {
         setIndex(state.x);
@@ -33,18 +38,43 @@ const ScrollPicker = ({
     tween(i);
   };
 
+  const move = ({ touchMoveY }) => {
+    if (tweenRef.isPlaying()) {
+      return;
+    }
+    const currentTop = (index * height * -1);
+    const newTop = currentTop + touchMoveY;
+    const clamped = clamp(newTop, height * (length - 1) * -1, 0)
+    // console.log(newTop, clamped);
+    bodyRef.current.style.top = `${clamped}px`;
+  }
+
+  const release = (gesture) => {
+    console.log({ gesture });
+  };
+
   useEffect(() => {
-    containerRef.current.addEventListener('mousewheel', (e) => {
-      console.log(e.wheelDelta);
-    })
+    // containerRef.current.addEventListener('mousewheel', (e) => {
+    //   console.log(e.wheelDelta);
+    // })
   }, []);
 
   const top = height * index * -1;
 
   return (
     <div className="scrollpicker" style={{ height: height * 5 }}>
-      <div ref={containerRef} className="scrollpicker__container" style={{ height }}>
-        <div className="scrollpicker__body" style={{ height: height * MONTHS_LONG.length, top }}>
+      <Draggable
+        ref={containerRef}
+        className="scrollpicker__container"
+        style={{ height }}
+        onPan={move}
+        onPanEnd={release}
+      >
+        <div
+          className="scrollpicker__body"
+          style={{ height: height * MONTHS_LONG.length, top }}
+          ref={bodyRef}
+        >
           {
             MONTHS_LONG.map((month, i) => (
               <div
@@ -58,7 +88,7 @@ const ScrollPicker = ({
             ))
           }
         </div>
-      </div>
+      </Draggable>
     </div>
   );
 };

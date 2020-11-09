@@ -14,3 +14,5 @@ export const MONTHS_LONG = [
   'November',
   'December',
 ];
+
+export const clamp = (value, min, max) => Math.max(min, Math.min(value, max));

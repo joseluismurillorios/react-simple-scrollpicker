@@ -1,0 +1,31 @@
+@import '../variables';
+
+.scrollpicker {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &__container {
+    width: 100%;
+    overflow: visible;
+    height: 60px;
+    background-color: $color-100;
+    position: relative;
+  }
+  &__body {
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+  &__pick {
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    user-select: none;
+    cursor: pointer;
+  }
+}

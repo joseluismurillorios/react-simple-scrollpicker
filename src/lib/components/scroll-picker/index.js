@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Tweenable } from 'shifty';
 
-import { clamp, MONTHS_LONG } from './utils';
+import { clamp, getIndex, MONTHS_LONG } from './utils';
 import './style.scss';
 import Draggable from '../draggable';
 
@@ -10,8 +10,9 @@ const ScrollPicker = ({
   height,
 }) => {
   const tweenRef = useRef(new Tweenable()).current;
-  const containerRef = useRef(null);
+  // const containerRef = useRef(null);
   const bodyRef = useRef(null);
+  const movingRef = useRef(false);
   // const scrollerRef = useRef(null);
   const [index, setIndex] = useState(1);
 
@@ -35,6 +36,11 @@ const ScrollPicker = ({
   }, [tweenRef, index]);
 
   const onPick = (i) => {
+    // console.log('onPick', movingRef.current);
+    // if (movingRef.current) {
+    //   movingRef.current = false;
+    //   return;
+    // }
     tween(i);
   };
 
@@ -42,15 +48,15 @@ const ScrollPicker = ({
     if (tweenRef.isPlaying()) {
       return;
     }
-    const currentTop = (index * height * -1);
-    const newTop = currentTop + touchMoveY;
-    const clamped = clamp(newTop, height * (length - 1) * -1, 0)
-    // console.log(newTop, clamped);
-    bodyRef.current.style.top = `${clamped}px`;
-  }
+    // movingRef.current = true;
+    console.log({ index })
+    const newIndex = getIndex(touchMoveY, index, height, length);
+    setIndex(newIndex);
+  };
 
-  const release = (gesture) => {
-    console.log({ gesture });
+  const release = ({ touchMoveY }) => {
+    const newIndex = getIndex(touchMoveY, index, height, length);
+    setIndex(Math.round(newIndex));
   };
 
   useEffect(() => {
@@ -59,12 +65,13 @@ const ScrollPicker = ({
     // })
   }, []);
 
+  console.log({ index })
   const top = height * index * -1;
 
   return (
     <div className="scrollpicker" style={{ height: height * 5 }}>
       <Draggable
-        ref={containerRef}
+        // ref={containerRef}
         className="scrollpicker__container"
         style={{ height }}
         onPan={move}

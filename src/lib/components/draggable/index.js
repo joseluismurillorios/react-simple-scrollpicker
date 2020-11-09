@@ -8,26 +8,16 @@ const Draggable = ({
   id,
   onPan,
   onPanEnd,
-  onSwipeRight,
-  onSwipeLeft,
   style,
 }) => {
   const swippableRef = useRef(null);
   useEffect(() => {
     const gesture = new TinyGesture(swippableRef.current);
     gesture.on('panmove', () => {
-      // console.log('panmove');
       onPan(gesture);
     });
     gesture.on('panend', () => {
-      // console.log('panend');
       onPanEnd(gesture);
-    });
-    gesture.on('swiperight', () => {
-      onSwipeRight();
-    });
-    gesture.on('swipeleft', () => {
-      onSwipeLeft();
     });
     return () => {
       gesture.destroy();
@@ -50,8 +40,6 @@ Draggable.defaultProps = {
   id: '',
   onPan: () => {},
   onPanEnd: () => {},
-  onSwipeRight: () => {},
-  onSwipeLeft: () => {},
   style: {},
 };
 
@@ -65,8 +53,6 @@ Draggable.propTypes = {
   id: PropTypes.string,
   onPan: PropTypes.func,
   onPanEnd: PropTypes.func,
-  onSwipeRight: PropTypes.func,
-  onSwipeLeft: PropTypes.func,
   style: PropTypes.objectOf(PropTypes.any),
 };
 

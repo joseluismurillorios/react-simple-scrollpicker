@@ -16,3 +16,10 @@ export const MONTHS_LONG = [
 ];
 
 export const clamp = (value, min, max) => Math.max(min, Math.min(value, max));
+
+export const getIndex = (touchMoveY, index, height, length) => {
+  const currentTop = (index * height * -1);
+  const nextIndex = ((currentTop + touchMoveY) / height) * -1;
+  const clamped = clamp(nextIndex, 0, length - 1);
+  return clamped;
+};

@@ -10,10 +10,7 @@ const ScrollPicker = ({
   height,
 }) => {
   const tweenRef = useRef(new Tweenable()).current;
-  // const containerRef = useRef(null);
   const bodyRef = useRef(null);
-  const movingRef = useRef(false);
-  // const scrollerRef = useRef(null);
   const [index, setIndex] = useState(1);
 
   const length = MONTHS_LONG.length;
@@ -36,11 +33,6 @@ const ScrollPicker = ({
   }, [tweenRef, index]);
 
   const onPick = (i) => {
-    // console.log('onPick', movingRef.current);
-    // if (movingRef.current) {
-    //   movingRef.current = false;
-    //   return;
-    // }
     tween(i);
   };
 
@@ -48,7 +40,6 @@ const ScrollPicker = ({
     if (tweenRef.isPlaying()) {
       return;
     }
-    // movingRef.current = true;
     console.log({ index })
     const newIndex = getIndex(touchMoveY, index, height, length);
     setIndex(newIndex);
@@ -58,12 +49,6 @@ const ScrollPicker = ({
     const newIndex = getIndex(touchMoveY, index, height, length);
     setIndex(Math.round(newIndex));
   };
-
-  useEffect(() => {
-    // containerRef.current.addEventListener('mousewheel', (e) => {
-    //   console.log(e.wheelDelta);
-    // })
-  }, []);
 
   console.log({ index })
   const top = height * index * -1;

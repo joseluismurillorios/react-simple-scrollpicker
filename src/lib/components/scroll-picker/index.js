@@ -43,7 +43,7 @@ const ScrollPicker = ({
         movingRef.current = false;
         console.log('onChange', items[to], to);
       });
-  }, [height, tweenRef]);
+  }, [height, tweenRef, items]);
 
   const move = ({ touchMoveY }) => {
     if (tweenRef.isPlaying()) {
@@ -72,6 +72,7 @@ const ScrollPicker = ({
   }, []);
 
   const toShow = itemsToShow > 1 ? itemsToShow : 1;
+  const overlayHeight = (toShow - 1) / 2;
   return (
     <div className="scrollpicker" style={{ height: height * toShow }}>
       <Draggable
@@ -101,6 +102,8 @@ const ScrollPicker = ({
           }
         </div>
       </Draggable>
+      <div className="scrollpicker__overlay overlay-top" style={{ height: overlayHeight * height }} />
+      <div className="scrollpicker__overlay overlay-bottom" style={{ height: overlayHeight * height }} />
     </div>
   );
 };

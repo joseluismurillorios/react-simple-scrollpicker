@@ -16,13 +16,16 @@ const TimePicker = ({
   const currentMinutes = value.getMinutes();
   const hrs =  currentHours % 12;
   const mins = Math.ceil(currentMinutes / 5) * 5;
-  console.log(currentHours, hrs);
-  console.log(currentMinutes, mins);
   return (
-    <div className={`scrollpicker__wrapper ${className}`} style={style}>
-      <ScrollPicker items={hours} selected={hrs.toString()} />
-      <ScrollPicker items={minutes} selected={mins.toString()} />
-      <ScrollPicker items={['AM','PM']} selected="AM" />
+    <div className="scrollpicker__main">
+      <div className="scrollpicker__header">
+        <div className="scrollpicker__title">Time</div>
+      </div>
+      <div className={`scrollpicker__wrapper ${className}`} style={style}>
+        <ScrollPicker items={hours} selected={hrs.toString()} />
+        <ScrollPicker items={minutes} selected={mins.toString()} />
+        <ScrollPicker items={['AM','PM']} selected="AM" />
+      </div>
     </div>
   );
 };

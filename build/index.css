@@ -1,0 +1,2 @@
+.scrollpicker{width:100%;position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center}.scrollpicker__container{width:100%;overflow:visible;height:60px;background-color:#c5cae9;position:relative}.scrollpicker__body{position:absolute;left:0;right:0}.scrollpicker__pick{height:60px;display:flex;justify-content:center;align-items:center;background-color:hsla(0,0%,100%,.8);-webkit-user-select:none;-ms-user-select:none;user-select:none;cursor:pointer}
+/*# sourceMappingURL=index.css.map */

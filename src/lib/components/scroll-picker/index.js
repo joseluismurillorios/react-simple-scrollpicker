@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Tweenable } from 'shifty';
 
-import { clamp, getIndex, MONTHS_LONG } from './utils';
+import { clamp, MONTHS_LONG } from './utils';
 import './style.scss';
 import Draggable from '../draggable';
 
@@ -42,18 +42,6 @@ const ScrollPicker = ({
       });
   }, [height, tweenRef]);
 
-  // const onPick = (i) => {
-  //   // if (tweenRef.isPlaying()) {
-  //   //   return;
-  //   // }
-  //   // if (movingRef.current) {
-  //   //   movingRef.current = false;
-  //   //   return;
-  //   // }
-  //   // console.log('onPick', i);
-  //   // tween(indexRef.current, i);
-  // };
-
   const move = ({ touchMoveY }) => {
     if (tweenRef.isPlaying()) {
       return;
@@ -67,7 +55,6 @@ const ScrollPicker = ({
   const release = ({ touchMoveY }, e) => {
     const currentIndex = (topRef.current / height) * -1;
     const index = e.target.getAttribute('data-index');
-    // console.log('release', touchMoveY, index);
     const moved = touchMoveY && Math.abs(touchMoveY) > 10;
     if (moved) {
       const rounded = Math.round(currentIndex);
@@ -93,7 +80,6 @@ const ScrollPicker = ({
           className="scrollpicker__body"
           style={{
             height: height * MONTHS_LONG.length,
-            // top,
           }}
           ref={bodyRef}
         >
@@ -103,7 +89,6 @@ const ScrollPicker = ({
                 key={month}
                 className="scrollpicker__pick"
                 style={{ height }}
-                // onClick={() => { onPick(i); }}
                 data-index={i}
               >
                 {month}

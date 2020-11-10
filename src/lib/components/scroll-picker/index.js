@@ -66,7 +66,7 @@ const ScrollPicker = ({
 
   useEffect(() => {
     tween(0, indexRef.current);
-  }, [tween]);
+  }, []);
 
   return (
     <div className="scrollpicker" style={{ height: height * 5 }}>

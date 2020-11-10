@@ -11,52 +11,68 @@ const ScrollPicker = ({
 }) => {
   const tweenRef = useRef(new Tweenable()).current;
   const bodyRef = useRef(null);
-  const [index, setIndex] = useState(1);
+  const movingRef = useRef(false);
+  const indexRef = useRef(1);
+  const topRef = useRef(indexRef.current * height * -1);
 
   const length = MONTHS_LONG.length;
 
-  const tween = useCallback((to) => {
+  const tween = useCallback((from, to) => {
+    if (from === to) { return; }
     if (tweenRef.isPlaying()) {
       tweenRef.pause();
       tweenRef.stop();
     }
     tweenRef.setConfig({
-      from: { x: index },
+      from: { x: from },
       to: { x: to },
       duration: 300,
       easing: 'easeOutQuad',
       step: (state) => {
-        setIndex(state.x);
+        const top = state.x * height * -1;
+        bodyRef.current.style.top = `${top}px`
       },
     });
-    tweenRef.tween();
-  }, [tweenRef, index]);
+    tweenRef.tween()
+      .then(() => {
+        indexRef.current = to;
+        movingRef.current = false;
+        console.log('onChange', MONTHS_LONG[to])
+      });
+  }, [height, tweenRef]);
 
   const onPick = (i) => {
-    tween(i);
+    if (movingRef.current) {
+      movingRef.current = false;
+      return;
+    }
+    console.log('onPick', i);
+    tween(indexRef.current, i);
   };
 
   const move = ({ touchMoveY }) => {
     if (tweenRef.isPlaying()) {
       return;
     }
-    console.log({ index })
-    const newIndex = getIndex(touchMoveY, index, height, length);
-    setIndex(newIndex);
+    movingRef.current = true;
+    const currentTop = (indexRef.current * height * -1);
+    topRef.current = currentTop + touchMoveY;
+    bodyRef.current.style.top = `${topRef.current}px`
   };
 
-  const release = ({ touchMoveY }) => {
-    const newIndex = getIndex(touchMoveY, index, height, length);
-    setIndex(Math.round(newIndex));
+  const release = () => {
+    const currentIndex = (topRef.current / height) * -1;
+    const rounded = Math.round(currentIndex);
+    tween(currentIndex, clamp(rounded, 0, length - 1));
   };
 
-  console.log({ index })
-  const top = height * index * -1;
+  useEffect(() => {
+    tween(0, indexRef.current);
+  }, [tween]);
 
   return (
     <div className="scrollpicker" style={{ height: height * 5 }}>
       <Draggable
-        // ref={containerRef}
         className="scrollpicker__container"
         style={{ height }}
         onPan={move}
@@ -64,7 +80,10 @@ const ScrollPicker = ({
       >
         <div
           className="scrollpicker__body"
-          style={{ height: height * MONTHS_LONG.length, top }}
+          style={{
+            height: height * MONTHS_LONG.length,
+            // top,
+          }}
           ref={bodyRef}
         >
           {

@@ -26,11 +26,12 @@ const ScrollPicker = ({
     tweenRef.setConfig({
       from: { x: from },
       to: { x: to },
-      duration: 300,
+      duration: 150,
       easing: 'easeOutQuad',
       step: (state) => {
         const top = state.x * height * -1;
         bodyRef.current.style.top = `${top}px`
+        topRef.current = top;
       },
     });
     tweenRef.tween()
@@ -41,14 +42,17 @@ const ScrollPicker = ({
       });
   }, [height, tweenRef]);
 
-  const onPick = (i) => {
-    if (movingRef.current) {
-      movingRef.current = false;
-      return;
-    }
-    console.log('onPick', i);
-    tween(indexRef.current, i);
-  };
+  // const onPick = (i) => {
+  //   // if (tweenRef.isPlaying()) {
+  //   //   return;
+  //   // }
+  //   // if (movingRef.current) {
+  //   //   movingRef.current = false;
+  //   //   return;
+  //   // }
+  //   // console.log('onPick', i);
+  //   // tween(indexRef.current, i);
+  // };
 
   const move = ({ touchMoveY }) => {
     if (tweenRef.isPlaying()) {
@@ -60,10 +64,17 @@ const ScrollPicker = ({
     bodyRef.current.style.top = `${topRef.current}px`
   };
 
-  const release = () => {
+  const release = ({ touchMoveY }, e) => {
     const currentIndex = (topRef.current / height) * -1;
-    const rounded = Math.round(currentIndex);
-    tween(currentIndex, clamp(rounded, 0, length - 1));
+    const index = e.target.getAttribute('data-index');
+    // console.log('release', touchMoveY, index);
+    const moved = touchMoveY && Math.abs(touchMoveY) > 10;
+    if (moved) {
+      const rounded = Math.round(currentIndex);
+      tween(currentIndex, clamp(rounded, 0, length - 1));
+    } else if (index !== undefined) {
+      tween(currentIndex, index);
+    }
   };
 
   useEffect(() => {
@@ -92,7 +103,8 @@ const ScrollPicker = ({
                 key={month}
                 className="scrollpicker__pick"
                 style={{ height }}
-                onClick={() => { onPick(i); }}
+                // onClick={() => { onPick(i); }}
+                data-index={i}
               >
                 {month}
               </div>

@@ -13,11 +13,11 @@ const Draggable = ({
   const swippableRef = useRef(null);
   useEffect(() => {
     const gesture = new TinyGesture(swippableRef.current);
-    gesture.on('panmove', () => {
-      onPan(gesture);
+    gesture.on('panmove', (e) => {
+      onPan(gesture, e);
     });
-    gesture.on('panend', () => {
-      onPanEnd(gesture);
+    gesture.on('panend', (e) => {
+      onPanEnd(gesture, e);
     });
     return () => {
       gesture.destroy();

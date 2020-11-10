@@ -7,11 +7,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: $color-50;
+  &__wrapper {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+  }
   &__container {
     width: 100%;
     overflow: visible;
     height: 60px;
-    background-color: $color-100;
+    // background-color: $color-100;
+    border-top: 1px solid $color-100;
+    border-bottom: 1px solid $color-100;
     position: relative;
   }
   &__body {
@@ -24,7 +33,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.8);
+    // background-color: rgba(255, 255, 255, 0.8);
     user-select: none;
     cursor: pointer;
   }

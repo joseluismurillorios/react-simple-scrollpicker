@@ -9,6 +9,7 @@ const TimePicker = ({
   className,
   style,
   value,
+  minValue,
 }) => {
   const roundedValue = new Date(roundUpTo5Minutes(value))
   const currentHours = roundedValue.getHours();
@@ -19,31 +20,30 @@ const TimePicker = ({
   const [ampm, setAmPm] = useState(currentHours < 12);
 
   const onHour = (e) => {
-    // console.log(e.name, e.value);
     setHours(e.value);
   };
 
   const onMinutes = (e) => {
-    // console.log(e.name, e.value);
     setMins(e.value);
   };
 
   const onAmPm = (e) => {
-    // console.log(e.name, e.value);
     setAmPm(e.value === 'AM');
   };
 
   useEffect(() => {
     const adder = ampm ? 0 : 12;
-    console.log(hours, minutes, ampm ? 'am' : 'pm');
     const newValue = new Date(value.getFullYear(), value.getMonth(), value.getDate(), hours + adder, minutes, 0);
-    console.log(newValue, value.getTime() > newValue.getTime());
-    // if (value.getTime() > newValue.getTime()) {
-    //   setHours(currentHours % 12);
-    //   setMins(currentMinutes);
-    //   setAmPm(currentHours < 12);
-    // }
-  }, [value, hours, minutes, ampm, currentHours, currentMinutes]);
+    if (minValue && minValue.getTime() > newValue.getTime()) {
+      setTimeout(() => {
+        setHours(currentHours % 12);
+        setMins(currentMinutes);
+        setAmPm(currentHours < 12);
+      }, 200);
+    } else {
+      console.log('onChange', newValue);
+    }
+  }, [value, minValue, hours, minutes, ampm, currentHours, currentMinutes]);
 
   return (
     <div className="scrollpicker__main">
@@ -64,6 +64,7 @@ TimePicker.defaultProps = {
   id: '',
   style: {},
   value: new Date(),
+  minValue: undefined,
 };
 
 TimePicker.propTypes = {
@@ -71,6 +72,7 @@ TimePicker.propTypes = {
   id: PropTypes.string,
   style: PropTypes.objectOf(PropTypes.any),
   value: PropTypes.instanceOf(Date),
+  minValue: PropTypes.instanceOf(Date),
 };
 
 export default TimePicker;

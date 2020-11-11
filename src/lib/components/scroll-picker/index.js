@@ -25,15 +25,14 @@ const ScrollPicker = ({
   const length = items.length;
 
   const tween = useCallback((from, to) => {
-    console.log(tweenRef.isPlaying());
     if (from === to) { return; }
     if (tweenRef.isPlaying()) {
       tweenRef.pause();
       tweenRef.stop();
     }
     tweenRef.setConfig({
-      from: { x: from },
-      to: { x: to },
+      from: { x: parseFloat(from) },
+      to: { x: parseFloat(to) },
       duration: 150,
       easing: 'easeOutQuad',
       step: (state) => {

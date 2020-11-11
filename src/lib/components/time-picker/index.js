@@ -11,6 +11,9 @@ const TimePicker = ({
   value,
   minValue,
   onChange,
+  onConfirm,
+  onCancel,
+  controls,
 }) => {
   const rounded = roundDate(value);
 
@@ -29,6 +32,16 @@ const TimePicker = ({
   const onAmPm = (e) => {
     setAmPm(e.value === 'AM');
   };
+
+  const onConfirmTime = () => {
+    const newHour = parse24hours(hours, am);
+    const newValue = new Date(value.getFullYear(), value.getMonth(), value.getDate(), newHour, minutes, 0);
+    console.log('onConfirm', newValue.toLocaleString());
+    onConfirm({
+      name,
+      value: newValue,
+    });
+  }
 
   useEffect(() => {
     const newHour = parse24hours(hours, am);
@@ -51,7 +64,23 @@ const TimePicker = ({
   return (
     <div className="scrollpicker__main">
       <div className="scrollpicker__header">
+        {controls && (
+          <button
+            className="scrollpicker__control control-cancel"
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
+        )}
         <div className="scrollpicker__title">Time</div>
+        {controls && (
+          <button
+            className="scrollpicker__control control-confirm"
+            onClick={onConfirmTime}
+          >
+            Confirm
+          </button>
+        )}
       </div>
       <div className={`scrollpicker__wrapper ${className}`} style={style}>
         <ScrollPicker name="hours" items={HOURS} value={hours} onChange={onHour} />
@@ -69,6 +98,9 @@ TimePicker.defaultProps = {
   value: new Date(),
   minValue: undefined,
   onChange: () => {},
+  onConfirm: () => {},
+  onCancel: () => {},
+  controls: false,
 };
 
 TimePicker.propTypes = {
@@ -78,6 +110,9 @@ TimePicker.propTypes = {
   value: PropTypes.instanceOf(Date),
   minValue: PropTypes.instanceOf(Date),
   onChange: PropTypes.func,
+  onConfirm: PropTypes.func,
+  onCancel: PropTypes.func,
+  controls: PropTypes.bool,
 };
 
 export default TimePicker;

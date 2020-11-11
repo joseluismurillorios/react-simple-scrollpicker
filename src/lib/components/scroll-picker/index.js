@@ -6,11 +6,6 @@ import Draggable from '../draggable';
 import { clamp, isMobile } from './utils';
 import './style.scss';
 
-// const events = {
-//   enter: isMobile ? 'touchstart': 'mouseover',
-//   exit: isMobile ? 'touchend': 'mouseleave',
-// };
-
 const ScrollPicker = ({
   id = (new Date()).getTime().toString(16),
   name,
@@ -54,7 +49,6 @@ const ScrollPicker = ({
       .then(() => {
         indexRef.current = to;
         movingRef.current = false;
-        // console.log('onChange', items[to], to);
         if (mountedRef.current) {
           onChange({
             name,
@@ -90,14 +84,6 @@ const ScrollPicker = ({
 
   const initialAnimation = useRef(() => { tween(0, indexRef.current) });
 
-  // const onEnter = () => {
-  //   pickerRef.current.classList.add('hover');
-  // };
-
-  // const onExit = () => {
-  //   pickerRef.current.classList.remove('hover');
-  // };
-
   const onContext = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -108,12 +94,8 @@ const ScrollPicker = ({
   useEffect(() => {
     initialAnimation.current();
     const curRef = pickerRef.current;
-    // curRef.addEventListener(events.enter, onEnter)
-    // curRef.addEventListener(events.exit, onExit)
     curRef.addEventListener('contextmenu', onContext);
     return () => {
-      // curRef.removeEventListener(events.enter, onEnter)
-      // curRef.removeEventListener(events.exit, onExit)
       curRef.removeEventListener('contextmenu', onContext);
     }
   }, []);

@@ -13,8 +13,15 @@ $color-50: rgb(232, 234, 246);
   background-color: $color-50;
   flex-direction: column;
   transition: background-color .2s ease-in-out;
-  &:hover {
-    background-color: rgba(255, 255, 255, 1);
+  &.scrollpicker__full {
+    &:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+  }
+  &.scrollpicker__mobile {
+    &:active {
+      background-color: rgba(255, 255, 255, 1);
+    }
   }
   &__main {
     width: 100%;

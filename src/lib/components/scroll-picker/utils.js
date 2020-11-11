@@ -48,3 +48,5 @@ export const roundDate = (value) => {
     roundedMinutes,
   }
 };
+
+export const isMobile = /Mobi/.test(window.navigator.userAgent);

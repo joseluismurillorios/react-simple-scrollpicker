@@ -25,7 +25,13 @@ const ModalPicker = ({
       <div className="modalpicker" ref={hourTransRef}>
         <button className="modalpicker__overlay" onClick={toggleModal} />
         <div className="modalpicker__wrapper">
-          <TimePicker onCancel={toggleModal} value={value} minValue={minValue} controls />
+          <TimePicker
+            onCancel={toggleModal}
+            onConfirm={toggleModal}
+            value={value}
+            minValue={minValue}
+            controls
+          />
         </div>
       </div>
     </CSSTransition>

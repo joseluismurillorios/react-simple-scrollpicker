@@ -3,8 +3,13 @@ import PropTypes from 'prop-types';
 import { Tweenable } from 'shifty';
 
 import Draggable from '../draggable';
-import { clamp } from './utils';
+import { clamp, isMobile } from './utils';
 import './style.scss';
+
+// const events = {
+//   enter: isMobile ? 'touchstart': 'mouseover',
+//   exit: isMobile ? 'touchend': 'mouseleave',
+// };
 
 const ScrollPicker = ({
   id = (new Date()).getTime().toString(16),
@@ -16,6 +21,7 @@ const ScrollPicker = ({
   onChange,
 }) => {
   const tweenRef = useRef(new Tweenable()).current;
+  const pickerRef = useRef(null);
   const bodyRef = useRef(null);
   const movingRef = useRef(false);
   const mountedRef = useRef(false);
@@ -61,8 +67,6 @@ const ScrollPicker = ({
   }, [height, tweenRef, items, onChange, name]);
 
   const move = ({ touchMoveY }) => {
-    // e.preventDefault();
-    // e.stopPropagation();
     if (tweenRef.isPlaying()) {
       return;
     }
@@ -86,8 +90,32 @@ const ScrollPicker = ({
 
   const initialAnimation = useRef(() => { tween(0, indexRef.current) });
 
+  // const onEnter = () => {
+  //   pickerRef.current.classList.add('hover');
+  // };
+
+  // const onExit = () => {
+  //   pickerRef.current.classList.remove('hover');
+  // };
+
+  const onContext = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    return false;
+  }
+
   useEffect(() => {
     initialAnimation.current();
+    const curRef = pickerRef.current;
+    // curRef.addEventListener(events.enter, onEnter)
+    // curRef.addEventListener(events.exit, onExit)
+    curRef.addEventListener('contextmenu', onContext);
+    return () => {
+      // curRef.removeEventListener(events.enter, onEnter)
+      // curRef.removeEventListener(events.exit, onExit)
+      curRef.removeEventListener('contextmenu', onContext);
+    }
   }, []);
 
   useEffect(() => {
@@ -103,7 +131,11 @@ const ScrollPicker = ({
   const overlayHeight = (toShow - 1) / 2;
 
   return (
-    <div className="scrollpicker" style={{ height: height * toShow }}>
+    <div
+      ref={pickerRef}
+      className={`scrollpicker ${isMobile ? 'scrollpicker__mobile' : 'scrollpicker__full'}`}
+      style={{ height: height * toShow }}
+    >
       <Draggable
         className="scrollpicker__container"
         style={{ height }}

@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/react-simple-scrollpicker/static/css/main.9acba752.css",
+    "main.js": "/react-simple-scrollpicker/static/js/main.23b78a43.js",
+    "main.js.map": "/react-simple-scrollpicker/static/js/main.23b78a43.js.map",
+    "index.html": "/react-simple-scrollpicker/index.html",
+    "precache-manifest.7d420ba50acbf6951c228de9e3fa68e2.js": "/react-simple-scrollpicker/precache-manifest.7d420ba50acbf6951c228de9e3fa68e2.js",
+    "service-worker.js": "/react-simple-scrollpicker/service-worker.js",
+    "static/css/main.9acba752.css.map": "/react-simple-scrollpicker/static/css/main.9acba752.css.map"
+  },
+  "entrypoints": [
+    "static/css/main.9acba752.css",
+    "static/js/main.23b78a43.js"
+  ]
+}

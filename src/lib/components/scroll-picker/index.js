@@ -7,6 +7,7 @@ import { clamp } from './utils';
 import './style.scss';
 
 const ScrollPicker = ({
+  id = (new Date()).getTime().toString(16),
   name,
   height,
   items,
@@ -24,6 +25,7 @@ const ScrollPicker = ({
   const length = items.length;
 
   const tween = useCallback((from, to) => {
+    console.log(tweenRef.isPlaying());
     if (from === to) { return; }
     if (tweenRef.isPlaying()) {
       tweenRef.pause();
@@ -57,6 +59,8 @@ const ScrollPicker = ({
   }, [height, tweenRef, items, onChange, name]);
 
   const move = ({ touchMoveY }) => {
+    // e.preventDefault();
+    // e.stopPropagation();
     if (tweenRef.isPlaying()) {
       return;
     }
@@ -110,14 +114,15 @@ const ScrollPicker = ({
           ref={bodyRef}
         >
           {
-            items.map((month, i) => (
+            items.map((item, i) => (
               <div
-                key={month}
+                key={`${id}-${item}`}
+                data-key={`${id}-${item}`}
                 className="scrollpicker__pick"
                 style={{ height }}
                 data-index={i}
               >
-                {month}
+                {item}
               </div>
             ))
           }
@@ -130,6 +135,7 @@ const ScrollPicker = ({
 };
 
 ScrollPicker.defaultProps = {
+  id: undefined,
   name: '',
   height: 60,
   itemsToShow: 5,
@@ -139,6 +145,7 @@ ScrollPicker.defaultProps = {
 };
 
 ScrollPicker.propTypes = {
+  id: PropTypes.string,
   name: PropTypes.string,
   height: PropTypes.number,
   itemsToShow: PropTypes.number,

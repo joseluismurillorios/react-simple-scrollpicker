@@ -1,5 +1,7 @@
 @import '../variables';
 
+$color-50: rgb(232, 234, 246);
+
 .scrollpicker {
   width: 100%;
   position: relative;
@@ -58,11 +60,11 @@
     pointer-events: none;
     &.overlay-top {
       top: 0;
-      background: linear-gradient(180deg, $color-50 10%, transparent 100%);
+      background: linear-gradient(180deg, rgba(232, 234, 246, 1) 10%,  rgba(232, 234, 246, 0) 100%);
     }
     &.overlay-bottom {
       bottom: 0;
-      background: linear-gradient(0deg, $color-50 10%, transparent 100%);
+      background: linear-gradient(0deg, rgba(232, 234, 246, 1) 10%,  rgba(232, 234, 246, 0) 100%);
     }
   }
 }

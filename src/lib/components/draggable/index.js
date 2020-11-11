@@ -11,6 +11,10 @@ const Draggable = ({
   style,
 }) => {
   const swippableRef = useRef(null);
+  const preventDefaults = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
   useEffect(() => {
     const gesture = new TinyGesture(swippableRef.current);
     gesture.on('panmove', (e) => {
@@ -19,8 +23,11 @@ const Draggable = ({
     gesture.on('panend', (e) => {
       onPanEnd(gesture, e);
     });
+    const curRef = swippableRef.current;
+    curRef.addEventListener('touchmove', preventDefaults);
     return () => {
       gesture.destroy();
+      curRef.removeEventListener('touchmove', preventDefaults);
     };
   }, []);
   return (

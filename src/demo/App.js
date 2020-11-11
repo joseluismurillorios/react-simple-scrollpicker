@@ -1,5 +1,5 @@
 import React from 'react';
-import { TimePicker, ScrollPicker } from '../lib';
+import { TimePicker } from '../lib';
 
 const App = () => (
   <div className="app__fixed">

@@ -1,10 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+
 import ScrollPicker from '../scroll-picker';
-
-const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
-const minutes = Array.from({ length: 12 }, (_, i) => (i * 5).toString());
-
+import { HOURS, MINUTES, roundUpTo5Minutes } from '../scroll-picker/utils';
 
 const TimePicker = ({
   id,
@@ -12,19 +10,38 @@ const TimePicker = ({
   style,
   value,
 }) => {
-  const currentHours = value.getHours();
-  const currentMinutes = value.getMinutes();
-  const hrs =  currentHours % 12;
-  const mins = Math.ceil(currentMinutes / 5) * 5;
+  const roundedValue = new Date(roundUpTo5Minutes(value))
+  const currentHours = roundedValue.getHours();
+  const currentMinutes = roundedValue.getMinutes();
+
+  const [hrs, setHours] = useState(currentHours % 12);
+  const [mins, setMins] = useState(currentMinutes);
+  const [ampm, setAmPm] = useState(currentHours < 12);
+
+  const onHour = (e) => {
+    console.log(e.value);
+    setHours(e.value);
+  };
+
+  const onMinutes = (e) => {
+    console.log(e.value);
+    setMins(e.value);
+  };
+
+  const onAmPm = (e) => {
+    console.log(e.value);
+    setAmPm(e.value === 'AM');
+  };
+
   return (
     <div className="scrollpicker__main">
       <div className="scrollpicker__header">
         <div className="scrollpicker__title">Time</div>
       </div>
       <div className={`scrollpicker__wrapper ${className}`} style={style}>
-        <ScrollPicker items={hours} selected={hrs.toString()} />
-        <ScrollPicker items={minutes} selected={mins.toString()} />
-        <ScrollPicker items={['AM','PM']} selected="AM" />
+        <ScrollPicker name="hours" items={HOURS} value={hrs} onChange={onHour} />
+        <ScrollPicker name="minutes" items={MINUTES} value={mins} onChange={onMinutes} />
+        <ScrollPicker name="ampm" items={['AM','PM']} value={ampm ? 'AM' : 'PM'} onChange={onAmPm} />
       </div>
     </div>
   );

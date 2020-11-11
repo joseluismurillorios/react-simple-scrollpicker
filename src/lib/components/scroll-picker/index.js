@@ -7,15 +7,18 @@ import { clamp } from './utils';
 import './style.scss';
 
 const ScrollPicker = ({
+  name,
   height,
   items,
-  selected,
+  value,
   itemsToShow,
+  onChange,
 }) => {
   const tweenRef = useRef(new Tweenable()).current;
   const bodyRef = useRef(null);
   const movingRef = useRef(false);
-  const indexRef = useRef(items.indexOf(selected));
+  const mountedRef = useRef(false);
+  const indexRef = useRef(items.indexOf(value));
   const topRef = useRef(indexRef.current * height * -1);
 
   const length = items.length;
@@ -41,9 +44,17 @@ const ScrollPicker = ({
       .then(() => {
         indexRef.current = to;
         movingRef.current = false;
-        console.log('onChange', items[to], to);
+        // console.log('onChange', items[to], to);
+        if (mountedRef.current) {
+          onChange({
+            name,
+            value: items[to],
+          });
+        } else {
+          mountedRef.current = true;
+        }
       });
-  }, [height, tweenRef, items]);
+  }, [height, tweenRef, items, onChange, name]);
 
   const move = ({ touchMoveY }) => {
     if (tweenRef.isPlaying()) {
@@ -71,8 +82,18 @@ const ScrollPicker = ({
     tween(0, indexRef.current);
   }, []);
 
+  useEffect(() => {
+    if (items[indexRef.current] !== value) {
+      const currIndex = indexRef.current;
+      indexRef.current = items.indexOf(value);
+      topRef.current = indexRef.current * height * -1;
+      tween(currIndex, indexRef.current);
+    }
+  }, [value, height, items, tween]);
+
   const toShow = itemsToShow > 1 ? itemsToShow : 1;
   const overlayHeight = (toShow - 1) / 2;
+
   return (
     <div className="scrollpicker" style={{ height: height * toShow }}>
       <Draggable
@@ -109,17 +130,24 @@ const ScrollPicker = ({
 };
 
 ScrollPicker.defaultProps = {
+  name: '',
   height: 60,
   itemsToShow: 5,
-  selected: 'Yes',
+  value: 'Yes',
   items: ['Yes', 'No'],
+  onChange: () => {},
 };
 
 ScrollPicker.propTypes = {
+  name: PropTypes.string,
   height: PropTypes.number,
   itemsToShow: PropTypes.number,
-  selected: PropTypes.string,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
   items: PropTypes.arrayOf(PropTypes.any),
+  onChange: PropTypes.func,
 };
 
 export default ScrollPicker;

@@ -28,3 +28,23 @@ export const getIndex = (touchMoveY, index, height, length) => {
   const clamped = clamp(nextIndex, 0, length - 1);
   return clamped;
 };
+
+export const parse24hours = (val, am) => {
+  // const am = val < 12;
+  const hour = val % 12;
+  if (am) {
+    return hour;
+  } else {
+    return hour === 0 ? 12 : hour + 12;
+  }
+}
+
+export const roundDate = (value) => {
+  const roundedValue = new Date(roundUpTo5Minutes(value))
+  const roundedHours = roundedValue.getHours();
+  const roundedMinutes = roundedValue.getMinutes();
+  return {
+    roundedHours,
+    roundedMinutes,
+  }
+};

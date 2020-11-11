@@ -25,7 +25,10 @@ const ScrollPicker = ({
   const length = items.length;
 
   const tween = useCallback((from, to) => {
-    if (from === to) { return; }
+    if (from === to) {
+      mountedRef.current = true;
+      return;
+    }
     if (tweenRef.isPlaying()) {
       tweenRef.pause();
       tweenRef.stop();
@@ -81,8 +84,10 @@ const ScrollPicker = ({
     }
   };
 
+  const initialAnimation = useRef(() => { tween(0, indexRef.current) });
+
   useEffect(() => {
-    tween(0, indexRef.current);
+    initialAnimation.current();
   }, []);
 
   useEffect(() => {

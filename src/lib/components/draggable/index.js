@@ -15,6 +15,14 @@ const Draggable = ({
     e.preventDefault();
     e.stopPropagation();
   };
+
+  // const panmove = useRef((gesture, e) => {
+  //   onPan(gesture, e);
+  // });
+  // const panend = useRef((gesture, e) => {
+  //   onPanEnd(gesture, e);
+  // });
+
   useEffect(() => {
     const gesture = new TinyGesture(swippableRef.current);
     gesture.on('panmove', (e) => {

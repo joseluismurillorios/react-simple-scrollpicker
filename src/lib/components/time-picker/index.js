@@ -2,22 +2,21 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import ScrollPicker from '../scroll-picker';
-import { HOURS, MINUTES, roundUpTo5Minutes } from '../scroll-picker/utils';
+import { HOURS, MINUTES, parse24hours, roundDate } from '../scroll-picker/utils';
 
 const TimePicker = ({
-  id,
+  name,
   className,
   style,
   value,
   minValue,
+  onChange,
 }) => {
-  const roundedValue = new Date(roundUpTo5Minutes(value))
-  const currentHours = roundedValue.getHours();
-  const currentMinutes = roundedValue.getMinutes();
+  const rounded = roundDate(value);
 
-  const [hours, setHours] = useState(currentHours % 12);
-  const [minutes, setMins] = useState(currentMinutes);
-  const [ampm, setAmPm] = useState(currentHours < 12);
+  const [hours, setHours] = useState(rounded.roundedHours % 12 || 12);
+  const [minutes, setMins] = useState(rounded.roundedMinutes);
+  const [am, setAmPm] = useState(rounded.roundedHours < 12);
 
   const onHour = (e) => {
     setHours(e.value);
@@ -32,18 +31,22 @@ const TimePicker = ({
   };
 
   useEffect(() => {
-    const adder = ampm ? 0 : 12;
-    const newValue = new Date(value.getFullYear(), value.getMonth(), value.getDate(), hours + adder, minutes, 0);
+    const newHour = parse24hours(hours, am);
+    const newValue = new Date(value.getFullYear(), value.getMonth(), value.getDate(), newHour, minutes, 0);
     if (minValue && minValue.getTime() > newValue.getTime()) {
       setTimeout(() => {
-        setHours(currentHours % 12);
-        setMins(currentMinutes);
-        setAmPm(currentHours < 12);
+        setHours(rounded.roundedHours % 12 || 12);
+        setMins(rounded.roundedMinutes);
+        setAmPm(rounded.roundedHours < 12);
       }, 200);
     } else {
       console.log('onChange', newValue);
+      onChange({
+        name,
+        value: newValue,
+      });
     }
-  }, [value, minValue, hours, minutes, ampm, currentHours, currentMinutes]);
+  }, [value, minValue, hours, minutes, am, rounded, name, onChange]);
 
   return (
     <div className="scrollpicker__main">
@@ -53,7 +56,7 @@ const TimePicker = ({
       <div className={`scrollpicker__wrapper ${className}`} style={style}>
         <ScrollPicker name="hours" items={HOURS} value={hours} onChange={onHour} />
         <ScrollPicker name="minutes" items={MINUTES} value={minutes} onChange={onMinutes} />
-        <ScrollPicker name="ampm" items={['AM','PM']} value={ampm ? 'AM' : 'PM'} onChange={onAmPm} />
+        <ScrollPicker name="am" items={['AM','PM']} value={am ? 'AM' : 'PM'} onChange={onAmPm} />
       </div>
     </div>
   );
@@ -61,18 +64,20 @@ const TimePicker = ({
 
 TimePicker.defaultProps = {
   className: '',
-  id: '',
+  name: '',
   style: {},
   value: new Date(),
   minValue: undefined,
+  onChange: () => {},
 };
 
 TimePicker.propTypes = {
   className: PropTypes.string,
-  id: PropTypes.string,
+  name: PropTypes.string,
   style: PropTypes.objectOf(PropTypes.any),
   value: PropTypes.instanceOf(Date),
   minValue: PropTypes.instanceOf(Date),
+  onChange: PropTypes.func,
 };
 
 export default TimePicker;

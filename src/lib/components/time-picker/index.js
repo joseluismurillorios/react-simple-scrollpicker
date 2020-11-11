@@ -40,7 +40,7 @@ const TimePicker = ({
         setAmPm(rounded.roundedHours < 12);
       }, 200);
     } else {
-      console.log('onChange', newValue);
+      console.log('onChange', newValue.toLocaleString());
       onChange({
         name,
         value: newValue,

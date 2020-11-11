@@ -16,20 +16,20 @@ const Draggable = ({
     e.stopPropagation();
   };
 
-  // const panmove = useRef((gesture, e) => {
-  //   onPan(gesture, e);
-  // });
-  // const panend = useRef((gesture, e) => {
-  //   onPanEnd(gesture, e);
-  // });
+  const panmove = useRef((gesture, e) => {
+    onPan(gesture, e);
+  });
+  const panend = useRef((gesture, e) => {
+    onPanEnd(gesture, e);
+  });
 
   useEffect(() => {
     const gesture = new TinyGesture(swippableRef.current);
     gesture.on('panmove', (e) => {
-      onPan(gesture, e);
+      panmove.current(gesture, e);
     });
     gesture.on('panend', (e) => {
-      onPanEnd(gesture, e);
+      panend.current(gesture, e);
     });
     const curRef = swippableRef.current;
     curRef.addEventListener('touchmove', preventDefaults);
